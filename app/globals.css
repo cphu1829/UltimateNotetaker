@@ -6,7 +6,7 @@
 
 .sidebar {
   width: 250px;
-  background-color: #8E4B95; /* Dark purple */
+  background-color: #271C23; /* Dark purple */
   color: white;
   padding: 20px;
   display: flex;
@@ -32,7 +32,7 @@
 }
 
 .section-item:hover, .section-item.active {
-  background-color: #A88FAC; /* Lighter purple */
+  background-color: #452736; /* Lighter purple */
 }
 
 .new-section {
@@ -57,7 +57,9 @@
 .main {
   flex-grow: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  padding: 50px;
+  gap: 50px;
 }
 
 .top-bar {
@@ -68,7 +70,11 @@
 
 .note-editor {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
+  background-color: #271C23; /* Lighter purple */
+  border-radius: 25px;
 }
 
 .note-editor input, .note-editor button {
@@ -77,12 +83,29 @@
 
 .note-editor button {
   padding: 10px;
-  background-color: #8E4B95; /* Green */
-  color: #808080;
+  background-color: #D55575; /* Green */
+  color: white;
   border: none;
   cursor: pointer;
 }
 
+.textarea {
+  resize: none;  /* Disable manual resizing */
+  width: 100%;   /* Optional: Make the textarea take full width */
+  max-height: 1000px;  /* Limit the height to 150px */
+  overflow: auto;     /* Enable scrolling when content exceeds max height */
+  font-family: 'Helvetica', 'Arial', sans-serif;  /* Set Helvetica with fallbacks */
+  background-color: #271C23;
+  border-color: #452736;
+  border-radius: 5px;
+  color: white;
+  font-size: large;
+}
+
+.send button {
+  width: 100%;
+}
+
 body {
-  background-color: #947c97;
+  background-color: #1B191D;
 }

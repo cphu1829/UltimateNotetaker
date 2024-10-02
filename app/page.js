@@ -4,7 +4,7 @@ import './globals.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { AiFillHome, AiOutlinePlus } from 'react-icons/ai';  // Import icons
-import { Box, Button, Stack, TextField } from '@mui/material'
+import { Box, Button, Stack, TextField, TextareaAutosize } from '@mui/material'
 import { useRef, useEffect } from 'react'
 
 
@@ -142,82 +142,71 @@ function App() {
       </div>
 
       <div className="main">
-        <div className="top-bar">
-          <input
-            type="text"
-            value={newNoteTitle}
-            onChange={(e) => setNewNoteTitle(e.target.value)}
-            placeholder="Note Title"
-          />
-        </div>
         <div className="note-editor">
-          <ReactQuill
-            value={newNoteContent}
-            onChange={setNewNoteContent}
-            placeholder="Write your note here..."
-          />
-          <button onClick={handleAddNote}>Add Note</button>
-        </div>
-
-        {/* Chatbot Content */}
-      <Stack
-        direction={'column'}
-        width="100%"
-        maxWidth="500px"
-        height="calc(100vh - 100px)"
-        border="1px solid black"
-        p={2}
-        spacing={3}
-        sx={{
-          overflow: "hidden", mx: "auto",
-        }}
-      >
-        <Stack
-          direction={'column'}
-          spacing={2}
-          flexGrow={1}
-          overflow="auto"
-          sx={{ maxHeight: '100%' }}
-        >
-          {messages.map((message, index) => (
-            <Box
-              key={index}
-              display="flex"
-              justifyContent={
-                message.role === 'assistant' ? 'flex-start' : 'flex-end'
-              }
-            >
-              <Box
-                bgcolor={
-                  message.role === 'assistant'
-                    ? 'primary.main'
-                    : 'secondary.main'
-                }
-                color="white"
-                borderRadius={6}
-                p={2}
-                maxWidth="90%"
-                sx={{ wordBreak: 'break-word'}}
-              >
-                {message.content}
-              </Box>
-            </Box>
-          ))}
-          <div ref={messagesEndRef} />
-        </Stack>
-        <Stack direction={'row'} spacing={2}>
-          <TextField
+          <TextareaAutosize
             label="Message"
-            fullWidth
+            className='textarea'
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
+            minRows={40}
           />
-          <Button variant="contained" onClick={sendMessage}>
+          <Button 
+            variant="contained" 
+            onClick={sendMessage}
+            className='send'>
             Send
           </Button>
-        </Stack>
-      </Stack>
+        </div>
+        <div className="note-editor">
+
+          {/* Chatbot Content */}
+          <Stack
+            direction={'column'}
+            width="100%"
+            maxWidth="200 px"
+            height="calc(100vh - 100px)"
+            border="1px solid black"
+            p={2}
+            spacing={3}
+            sx={{
+              overflow: "hidden", mx: "auto",
+            }} 
+          >
+            <Stack
+              direction={'column'}
+              spacing={2}
+              flexGrow={1}
+              overflow="auto"
+              sx={{ maxHeight: '100%' }}
+            >
+              {messages.map((message, index) => (
+                <Box
+                  key={index}
+                  display="flex"
+                  justifyContent={
+                    message.role === 'assistant' ? 'flex-start' : 'flex-end'
+                  }
+                >
+                  <Box
+                    bgcolor={
+                      message.role === 'assistant'
+                        ? 'primary.main'
+                        : 'secondary.main'
+                    }
+                    color="white"
+                    borderRadius={6}
+                    p={2}
+                    maxWidth="90%"
+                    sx={{ wordBreak: 'break-word'}}
+                  >
+                    {message.content}
+                  </Box>
+                </Box>
+              ))}
+              <div ref={messagesEndRef} />
+            </Stack>
+          </Stack>
+        </div>
       </div>
     </div>
   );
