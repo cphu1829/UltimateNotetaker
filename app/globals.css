@@ -75,6 +75,7 @@
   padding: 20px;
   background-color: #271C23; /* Lighter purple */
   border-radius: 25px;
+  max-width: 50%;
 }
 
 .note-editor input, .note-editor button {

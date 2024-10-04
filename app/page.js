@@ -162,8 +162,8 @@ function App() {
           {/* Chatbot Content */}
           <Stack
             direction={'column'}
-            width="100%"
-            maxWidth="200 px"
+            width="90%"
+            maxWidth="90%"
             height="calc(100vh - 100px)"
             border="1px solid black"
             p={2}
