@@ -14,7 +14,8 @@ export async function POST(req){
 
     const completion = await openai.chat.completions.create({
         messages: [
-            { role: "system", content: systemPrompt }, ...data
+            { role: "system", content: systemPrompt },
+            data, // Directly add the single object
         ],
         model: "openai/gpt-3.5-turbo",
         stream: true,
