@@ -40,12 +40,14 @@ function App() {
         if (message.trim()) { // Don't send empty messages
             setIsDisabled(true);
 
+            console.log("is being disables now")
+
             sendMessage(message, messages, setMessages);
             console.log(messages)
 
             setTimeout(() => {
                 setIsDisabled(false);
-            }, 30000);
+            }, 3);
         };
     }
 
@@ -65,7 +67,7 @@ function App() {
 
     return (
         <Box className="app">
-            <Box className={styles.sidebar}>
+            <Box className="sidebar">
                 <Box className="logo">
                     <AiFillHome size="1.5em" />  {/* Home icon */}
                     <h1>NoteApp</h1>
@@ -104,7 +106,7 @@ function App() {
                     <Button 
                         variant="contained" 
                         onClick={summarize}
-                        className={styles.send}
+                        className="send"
                         disabled={isDisabled}>
                         Send
                     </Button>
@@ -112,7 +114,7 @@ function App() {
 
                 <Box className="note-editor">
 
-                    <Box className={styles.postDesc}>
+                    <Box className="postDesc">
                         <Typography
                             variant="body1" // Equivalent to a <p> tag
                             className="ai-output">
