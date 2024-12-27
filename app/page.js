@@ -28,7 +28,7 @@ function App() {
     //     },
     //   ])
     const [message, setMessage] = useState('')
-
+    const popupRef = useRef(null);
     const handleAddSection = () => {
         if (newSectionName.trim()) {
             setSections([...sections, { name: newSectionName, notes: [] }]);
@@ -65,6 +65,111 @@ function App() {
         }
     };
 
+    const [popupVisible, setPopupVisible] = useState(false);
+    const [popupContent, setPopupContent] = useState('HELLLO');
+    const [popupPosition, setPopupPosition] = useState({ top: 1000, left: 1000 });
+    var cursorPosition = [0,0];
+
+    const handleMouseUp = () => {
+        const selection = window.getSelection();
+        const selectedText = selection.toString().trim();
+
+        if (selectedText) {
+            console.log("handleMouseUP")
+            // console.log("Cursor end pos:", textarea, cursorPosition)
+            
+            // Get the start and end container nodes
+            
+            // const startContainer = range.startContainer;
+            // const endContainer = range.endContainer;
+            // const startOffset = range.startOffset;
+            // const endOffset = range.endOffset;
+            
+            // Get the start and end offsets within the container nodes
+            const range = selection.getRangeAt(0).getBoundingClientRect();
+            const { top, left, width, height } = range;
+
+            console.log("top: original vs new", window.scrollY + top + height + 10,  height + cursorPosition[1])
+            var relativeXpos = cursorPosition[0]
+            if (event.clientX < cursorPosition[0]) {
+                relativeXpos = event.clientX
+            }
+
+            setPopupContent(`"${selectedText}"`);
+            setPopupPosition({
+                // top: window.scrollY + top + height + 10, // Position 10px below the selection
+                // left: window.scrollX + left, // Align popup with the left of the selection
+
+                top: height + cursorPosition[1],
+                left: relativeXpos
+            });
+        //   console.log("top, left", top, left)
+            setPopupVisible(true);
+        } else {
+            setPopupVisible(false);
+        }
+    };
+
+
+    const handleMouseDown = () => {
+        if (popupRef.current && !popupRef.current.contains(e.target)) {
+            setPopupVisible(false); // Close the popup if clicked outside
+        }
+        const textarea = document.getElementById("myEditableDiv");
+        cursorPosition = [event.clientX, event.clientY];
+        console.log("Cursor start pos:", cursorPosition);
+    };
+
+    // useEffect(() => {
+    //     const button = document.getElementById("Define Button");
+    //     button.addEventListener("click", console.log("1231231"));
+    
+    //     return () => {
+    //         button.removeEventListener("click", handleClick); // Cleanup
+    //     };
+    // }, []);
+    const popupSendMessage = async (type) => {
+        console.log("popupSendMessage")
+        console.log("this is popupContent: ", popupContent)
+        setPopupVisible(false)
+        if (popupContent.trim()) { // Don't send empty messages
+            setIsDisabled(true);
+
+            console.log("is being disabled now")
+
+            prompt = ""
+            if (type == "Define") {
+                prompt = "Define: "
+            }
+            else if (type == "Explain") {
+                prompt = "Explain this in simpler terms: "
+            }
+            else if (type == "Solve") {
+                // send to WOLFRAM ALPHA
+
+                //this is a placeholder for now
+                prompt = "Solve this equation: "
+            }
+            sendMessage(prompt + popupContent, messages, setMessages);
+            console.log(messages)
+
+            setTimeout(() => {
+                setIsDisabled(false);
+            }, 3);
+        };
+    }
+
+    useEffect(() => {
+        document.addEventListener('mouseup', handleMouseUp);
+        document.addEventListener('mousedown', handleMouseDown); // To close the popup if clicking outside
+
+        // Cleanup event listeners when the component unmounts
+        return () => {
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.removeEventListener('mousedown', handleMouseDown);
+        };
+    }, []);
+
     return (
         <Box className="app">
             <Box className="sidebar">
@@ -94,15 +199,61 @@ function App() {
                 </Box>
             </Box>
 
-            <Box className="main">
+            <Box className="main"
+            // onMouseUp={handleMouseUp}
+            // onMouseDown={handleMouseDown}
+            >
                 <Box className="note-editor">
                     <TextareaAutosize
+                        id = "myEditableDiv"
                         label="Message"
                         className='textarea'
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         minRows={40}
                     />
+                     {popupVisible && (
+                        <Stack
+                            alignItems={'stretch'}
+                            spacing={1}
+                            style={{
+                                position: 'absolute',
+                                top: `${popupPosition.top}px`,
+                                left: `${popupPosition.left}px`,
+                            }}
+                        >
+                            {/* <Box
+                            style={{
+                                backgroundColor: '#f1f1f1',
+                                border: '1px solid #ccc',
+                                padding: '10px',
+                                boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+                                zIndex: 1000,
+                            }}
+                            >{popupContent}</Box> */}
+                            <Button
+                                id = "Define Button"
+                                // onClick={sendMessage("explain" + popupContent, messages, setMessages)}
+                                // disabled={!popupVisible}
+                                onClick={() => popupSendMessage("Define")}
+                            >
+                                Define
+                            </Button>
+                            <Button
+                                onClick={() => popupSendMessage("Explain")}
+                            >
+                                Explain
+                            </Button>
+                            <Button
+                                onClick={() => popupSendMessage("Solve")}
+                            >
+                                Solve
+                            </Button>
+
+                        
+                        </Stack>
+                    )}
+
                     <Button 
                         variant="contained" 
                         onClick={summarize}
